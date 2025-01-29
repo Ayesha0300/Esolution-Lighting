@@ -1,6 +1,12 @@
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 
+interface LineItem {
+  name: string;
+  price: number;
+  image: string;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -8,7 +14,7 @@ export async function POST(req: Request) {
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: items.map((item: any) => ({
+      line_items: items.map((item: LineItem) => ({
         price_data: {
           currency: 'usd',
           product_data: {

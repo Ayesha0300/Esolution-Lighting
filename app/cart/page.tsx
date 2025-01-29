@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Minus, Plus, Trash2 } from "lucide-react"
 import { CheckoutButton } from "@/components/ui/checkout-button"
+import Link from 'next/link'
 
 interface CartItem {
   id: number
@@ -63,9 +64,11 @@ export default function CartPage() {
       {cartItems.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-xl text-gray-600">Your cart is empty</p>
-          <Button className="mt-4" href="/catalog">
-            Continue Shopping
-          </Button>
+          <Link href="/catalog">
+            <Button className="mt-4">
+              Continue Shopping
+            </Button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

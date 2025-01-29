@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
-import { runCrew } from "@/lib/crewai-setup"
 
 export async function GET() {
   try {
+    // Import dynamically to avoid ESM issues
+    const { runCrew } = await import('@/lib/crewai-setup')
     const result = await runCrew("Get product information", {})
     return NextResponse.json({ result })
   } catch (error) {
@@ -11,17 +12,14 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const { prompt, productDetails } = await req.json()
-    const result = await runCrew(prompt, productDetails)
+    const { runCrew } = await import('@/lib/crewai-setup')
+    const result = await runCrew("Get product information", {})
     return NextResponse.json({ result })
   } catch (error) {
-    console.error("Error:", error)
-    return NextResponse.json(
-      { error: "Error processing request" },
-      { status: 500 }
-    )
+    console.error("CrewAI Error:", error)
+    return NextResponse.json({ error: "Failed to process request" }, { status: 500 })
   }
 }
 

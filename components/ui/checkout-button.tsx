@@ -6,8 +6,14 @@ import { useToast } from '@/components/ui/use-toast'
 import { stripePromise } from '@/lib/stripe'
 import { Loader2 } from 'lucide-react'
 
+interface CartItem {
+  name: string;
+  price: number;
+  image: string;
+}
+
 interface CheckoutButtonProps {
-  items: any[]
+  items: CartItem[];
 }
 
 export function CheckoutButton({ items }: CheckoutButtonProps) {
