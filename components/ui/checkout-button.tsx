@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from './button'
-import { useToast } from './use-toast'
+import { useToast } from '@/components/ui/use-toast'
 import { stripePromise } from '@/lib/stripe'
 import { Loader2 } from 'lucide-react'
 
@@ -48,7 +48,7 @@ export function CheckoutButton({ items }: CheckoutButtonProps) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: result.error.message,
+          description: result.error.message ?? "An error occurred during checkout",
         })
       }
     } catch (error) {
