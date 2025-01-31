@@ -1,81 +1,90 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react"
-import { motion } from "framer-motion"
+import { useCart } from "@/lib/context/cart-context"
+import { ShoppingCart, User, ShieldCheck } from "lucide-react"
+import { Button } from "./ui/button"
+import { Logo } from "@/components/ui/logo"
 
 const FloatingNav = () => {
-  const [active, setActive] = useState<string>("home")
-
-  const navItems = [
-    { name: "Home", href: "/" },
-    { name: "Interior", href: "/interior" },
-    { name: "Exterior", href: "/exterior" },
-    { name: "Catalog", href: "/catalog" },
-  ]
-
-  const rightNavItems = [
-    { name: "Login", href: "/login" },
-    { name: "Cart", href: "/cart" },
-    { name: "Admin", href: "/admin" },
-  ]
+  const { cartItems } = useCart()
+  const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <div className="fixed top-0 inset-x-0 h-[4.5rem] z-50">
-      <motion.div
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed inset-x-0 top-6 w-full px-4"
-      >
-        <nav className="mx-auto max-w-7xl relative">
-          <div className="relative w-full">
-            <div className="relative flex items-center justify-between w-full h-16 px-4 py-2 backdrop-blur-sm bg-white/75 dark:bg-gray-800/75 rounded-full border border-white/10">
-              {/* Logo */}
-              <Link
-                href="/"
-                className="flex items-center text-lg font-semibold text-gray-700 dark:text-white"
-              >
-                Esolution LIGHTING
-              </Link>
-
-              {/* Center Nav Items */}
-              <div className="hidden md:flex items-center justify-center space-x-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      active === item.name.toLowerCase()
-                        ? "bg-gray-100 dark:bg-gray-700"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700"
-                    }`}
-                    onClick={() => setActive(item.name.toLowerCase())}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Right Nav Items */}
-              <div className="flex items-center space-x-4">
-                {rightNavItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-sm font-medium text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-200"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+    <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white shadow-lg">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center py-3">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="text-blue-400 group-hover:text-blue-300 transition-colors">
+              <Logo />
             </div>
-          </div>
-        </nav>
-      </motion.div>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold leading-none group-hover:text-gray-300 transition-colors">
+                ESolution
+              </span>
+              <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+                Luxury Lighting Solutions
+              </span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="flex items-center gap-6">
+            {/* Interior Page */}
+            <Link href="/interior" aria-label="Interior">
+              <span className="text-gray-300 hover:text-white transition-colors cursor-pointer">
+                Interior
+              </span>
+            </Link>
+
+            {/* Exterior Page */}
+            <Link href="/exterior" aria-label="Exterior">
+              <span className="text-gray-300 hover:text-white transition-colors cursor-pointer">
+                Exterior
+              </span>
+            </Link>
+
+            {/* Catalog Page */}
+            <Link href="/catalog" aria-label="Catalog">
+              <span className="text-gray-300 hover:text-white transition-colors cursor-pointer">
+                Catalog
+              </span>
+            </Link>
+
+            {/* Login Link */}
+            <Link href="/login" aria-label="Login">
+              <Button variant="ghost" size="sm" className="flex items-center hover:bg-gray-700 hover:text-gray-300">
+                <User className="h-5 w-5 mr-2" />
+                <span className="hidden sm:inline">Login</span>
+              </Button>
+            </Link>
+
+            {/* Cart Link with Counter */}
+            <Link href="/cart" aria-label={`Cart with ${itemCount} items`}>
+              <Button variant="ghost" size="sm" className="relative flex items-center hover:bg-gray-700 hover:text-gray-300">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                <span className="hidden sm:inline">Cart</span>
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-3 bg-blue-500 text-white text-xs rounded-full min-w-[20px] min-h-[20px] flex items-center justify-center px-1">
+                    {itemCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
+
+            {/* Admin Link */}
+            <Link href="/admin" aria-label="Admin Panel">
+              <Button variant="ghost" size="sm" className="flex items-center hover:bg-gray-700 hover:text-gray-300">
+                <ShieldCheck className="h-5 w-5 mr-2" />
+                <span className="hidden sm:inline">Admin</span>
+              </Button>
+            </Link>
+          </nav>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default FloatingNav 
+export default FloatingNav

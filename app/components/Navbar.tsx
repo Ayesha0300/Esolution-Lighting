@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between p-4 bg-gray-800 text-white">
+    <nav className="flex justify-between p-4 bg-grey-800 text-white">
       <Link href="/">Home</Link>
       <div>
         <Link href="/login" className="mr-4">Login</Link>
