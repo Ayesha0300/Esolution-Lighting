@@ -28,7 +28,7 @@ const catalogItems = [
         name: "Garden Path Lights",
         collection: "Outdoor Essential",
         price: 5000,
-        image: "https://pixabay.com/get/g2e693430a26d7ec4fd4fa60d9794a1646d74580abc04f09581340b6f9df3f26bb23956fa2bfcff5072ef93b0a5dd49c8a4d0beed07df97f6419d4a439b4a6c9c_1280.jpg",
+        image: "https://pixabay.com/get/g375a83d6c34e457eb7db6eebc819f16c1a0a3b720241184dd2d3b6f8283d1e3e6b9432b7212897b755daad193bf7a0456399035856578df127e13ad558e29f10_1280.jpg",
         description: "Weather-resistant path lighting solution",
       },
       {

@@ -14,7 +14,7 @@ const initialProducts = [
     name: "Celestial Orb Chandelier",
     collection: "Cosmic Illumination",
     price: 2999,
-    image: "https://images.pexels.com/photos/441379/pexels-photo-441379.jpeg",
+    image: "https://pixabay.com/get/gf76dc1e749ed8271af98aa2ad8f8a5c04dd5b875f4cd75f53607335bd18f30ff60126bea3504142e6e88f5d2ab6a567be8bd3479fda6491dc192813a19335cbe_1280.jpg",
     description: "An exquisite chandelier that illuminates your space with a celestial glow.",
   },
   // Add more products as needed
