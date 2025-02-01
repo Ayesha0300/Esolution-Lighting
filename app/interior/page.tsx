@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ShoppingCart } from "lucide-react";
@@ -97,52 +97,46 @@ const interiorLights = [
 
 
 export default function InteriorPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedStyle, setSelectedStyle] = useState<string>("all");
-  const [priceRange, setPriceRange] = useState<string>("all");
-  const [cart, setCart] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [selectedStyle, setSelectedStyle] = useState<string>("all")
+  const [priceRange, setPriceRange] = useState<string>("all")
 
   const filterProducts = () => {
-    let filtered = [...interiorLights];
+    let filtered = [...interiorLights]
 
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (category) => category.category.toLowerCase() === selectedCategory.toLowerCase()
-      );
+      filtered = filtered.filter((category) => category.category.toLowerCase() === selectedCategory.toLowerCase())
     }
 
     filtered = filtered
       .map((category) => ({
         ...category,
         items: category.items.filter((item) => {
-          const styleMatch =
-            selectedStyle === "all" || item.style.toLowerCase() === selectedStyle.toLowerCase();
+          const styleMatch = selectedStyle === "all" || item.style.toLowerCase() === selectedStyle.toLowerCase()
           const priceMatch =
             priceRange === "all" ||
             (priceRange === "under25k" && item.price < 25000) ||
             (priceRange === "25k-50k" && item.price >= 25000 && item.price <= 50000) ||
-            (priceRange === "over50k" && item.price > 50000);
+            (priceRange === "over50k" && item.price > 50000)
 
-          return styleMatch && priceMatch;
+          return styleMatch && priceMatch
         }),
       }))
-      .filter((category) => category.items.length > 0);
+      .filter((category) => category.items.length > 0)
 
-    return filtered;
-  };
+    return filtered
+  }
 
   function addToCart(item: any) {
-    setCart([...cart, item]);
-    console.log("Added to cart:", item);
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+    const updatedCart = [...cart, item]
+    localStorage.setItem("cart", JSON.stringify(updatedCart))
+    console.log("Added to cart:", item)
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-7xl mx-auto"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-12">Interior Lighting Collection</h1>
 
         {/* Filters */}
@@ -153,9 +147,11 @@ export default function InteriorPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="chandeliers">Chandeliers</SelectItem>
-              <SelectItem value="wall lights">Wall Lights</SelectItem>
-              <SelectItem value="pendant lights">Pendant Lights</SelectItem>
+              {interiorLights.map((category) => (
+                <SelectItem key={category.category} value={category.category.toLowerCase()}>
+                  {category.category}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
@@ -199,12 +195,7 @@ export default function InteriorPage() {
                   className="bg-white rounded-lg shadow-md overflow-hidden"
                 >
                   <div className="relative h-64">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
+                    <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
@@ -212,8 +203,9 @@ export default function InteriorPage() {
                     <p className="text-sm text-gray-500 mb-4">{item.description}</p>
                     <div className="flex justify-between items-center">
                       <p className="text-lg font-bold">Rs.{item.price.toLocaleString()}</p>
-                      <Button className="mt-2" onClick={() => addToCart(item.name)}>
-                        <ShoppingCart className="w-5 h-5" />
+                      <Button className="mt-2" onClick={() => addToCart(item)}>
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Add to Cart
                       </Button>
                     </div>
                   </div>
@@ -224,5 +216,5 @@ export default function InteriorPage() {
         ))}
       </motion.div>
     </div>
-  );
+  )
 }

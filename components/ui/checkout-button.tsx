@@ -48,7 +48,7 @@ export function CheckoutButton({ total, items }: CheckoutButtonProps) {
 
   return (
     <Button onClick={handleCheckout} className="w-full" disabled={isLoading}>
-      {isLoading ? "Processing..." : `Checkout - $${total.toLocaleString()}`}
+      {isLoading ? "Processing..." : `Checkout - Rs.${typeof total === "number" ? total.toFixed(2) : "0.00"}`}
     </Button>
   )
 }

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState }  from "react";
+import React, { useEffect, useState }  from "react";
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ShoppingCart } from "lucide-react";
@@ -63,11 +63,11 @@ const exteriorLights = [
 
 
 export default function ExteriorPage() {
-  const [cart, setCart] = useState<any[]>([]);
-
   function addToCart(item: any): void {
-    setCart([...cart, item]);
-    console.log(`Added ${item.name} to cart.`);
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+    const updatedCart = [...cart, item]
+    localStorage.setItem("cart", JSON.stringify(updatedCart))
+    console.log(`Added ${item.name} to cart.`)
   }
 
   return (
@@ -78,7 +78,7 @@ export default function ExteriorPage() {
           <div key={i} className="group relative">
             <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
               <Image
-                src={light.image}
+                src={light.image || "/placeholder.svg"}
                 alt={light.name}
                 width={500}
                 height={500}
@@ -89,13 +89,14 @@ export default function ExteriorPage() {
               <h3 className="text-lg font-semibold">{light.name}</h3>
               <p className="text-sm text-gray-600">{light.collection}</p>
               <p className="mt-2 font-semibold">Rs.{light.price.toLocaleString()}</p>
-              <Button className="mt-2" onClick={() => addToCart(light.name)}>
-                <ShoppingCart className="w-5 h-5" />
+              <Button className="mt-2" onClick={() => addToCart(light)}>
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Add to Cart
               </Button>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+  )
 }

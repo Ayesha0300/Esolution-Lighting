@@ -1,13 +1,16 @@
+"use client"
+
 import { useState, useEffect } from "react"
 
 interface CartItem {
   id: number
   name: string
-  collection: string
   price: number
   image: string
-  description: string
+  collection?: string
   quantity: number
+  description?: string
+  isFavorite?: boolean
 }
 
 export function useCart() {
@@ -20,32 +23,42 @@ export function useCart() {
     }
   }, [])
 
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems))
-  }, [cartItems])
+  const saveCart = (items: CartItem[]) => {
+    setCartItems(items)
+    localStorage.setItem("cart", JSON.stringify(items))
+  }
 
   const addToCart = (item: CartItem) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id)
-      if (existingItem) {
-        return prevItems.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
-      }
-      return [...prevItems, item]
-    })
+    const existingItem = cartItems.find((i) => i.id === item.id)
+    if (existingItem) {
+      const updatedCart = cartItems.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
+      saveCart(updatedCart)
+    } else {
+      saveCart([...cartItems, { ...item, quantity: 1 }])
+    }
   }
 
   const removeFromCart = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id))
+    saveCart(cartItems.filter((item) => item.id !== id))
   }
 
-  const updateQuantity = (id: number, change: number) => {
-    setCartItems((prevItems) =>
-      prevItems
-        .map((item) => (item.id === id ? { ...item, quantity: Math.max(0, item.quantity + change) } : item))
-        .filter((item) => item.quantity > 0),
-    )
+  const updateQuantity = (id: number, newQuantity: number) => {
+    if (newQuantity < 1) return
+    const updatedCart = cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item))
+    saveCart(updatedCart)
   }
 
-  return { cartItems, addToCart, removeFromCart, updateQuantity }
+  const toggleFavorite = (id: number) => {
+    const updatedCart = cartItems.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item))
+    saveCart(updatedCart)
+  }
+
+  return {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    toggleFavorite,
+  }
 }
 
