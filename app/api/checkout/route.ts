@@ -16,18 +16,19 @@ export async function POST(req: Request) {
       payment_method_types: ['card'],
       line_items: items.map((item: LineItem) => ({
         price_data: {
-          currency: 'usd',
+          currency: 'pkr',
           product_data: {
             name: item.name,
             images: [item.image],
           },
-          unit_amount: item.price * 100,
+          unit_amount: Math.round (item.price * 100),
         },
-        quantity: 1,
+        quantity:1,
       })),
+
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
+      success_url: "http://localhost:3000/success",
+      cancel_url:  "http://localhost:3000/cancle",
     });
 
     return NextResponse.json({ sessionId: session.id });

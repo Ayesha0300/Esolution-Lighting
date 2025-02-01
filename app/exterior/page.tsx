@@ -1,6 +1,8 @@
+"use client"
+import React, { useState }  from "react";
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-
+import { ShoppingCart } from "lucide-react";
 const exteriorLights = [
   {
     name: "Garden Path Lights",
@@ -59,7 +61,15 @@ const exteriorLights = [
   // Add more exterior lights...
 ]
 
+
 export default function ExteriorPage() {
+  const [cart, setCart] = useState<any[]>([]);
+
+  function addToCart(item: any): void {
+    setCart([...cart, item]);
+    console.log(`Added ${item.name} to cart.`);
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Exterior Lighting Collection</h1>
@@ -79,11 +89,13 @@ export default function ExteriorPage() {
               <h3 className="text-lg font-semibold">{light.name}</h3>
               <p className="text-sm text-gray-600">{light.collection}</p>
               <p className="mt-2 font-semibold">Rs.{light.price.toLocaleString()}</p>
-              <Button className="mt-2">Add to Cart</Button>
+              <Button className="mt-2" onClick={() => addToCart(light.name)}>
+                <ShoppingCart className="w-5 h-5" />
+              </Button>
             </div>
           </div>
         ))}
       </div>
     </div>
-  )
-} 
+  );
+}

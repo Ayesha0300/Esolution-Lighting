@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion"
 import {
   Select,
@@ -94,34 +95,45 @@ const interiorLights = [
   }
 ]
 
+
 export default function InteriorPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [selectedStyle, setSelectedStyle] = useState<string>("all")
-  const [priceRange, setPriceRange] = useState<string>("all")
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedStyle, setSelectedStyle] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState<string>("all");
+  const [cart, setCart] = useState<any[]>([]);
 
   const filterProducts = () => {
-    let filtered = [...interiorLights]
+    let filtered = [...interiorLights];
 
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(category => 
-        category.category.toLowerCase() === selectedCategory.toLowerCase()
-      )
+      filtered = filtered.filter(
+        (category) => category.category.toLowerCase() === selectedCategory.toLowerCase()
+      );
     }
 
-    filtered = filtered.map(category => ({
-      ...category,
-      items: category.items.filter(item => {
-        const styleMatch = selectedStyle === "all" || item.style.toLowerCase() === selectedStyle.toLowerCase()
-        const priceMatch = priceRange === "all" || 
-          (priceRange === "under25k" && item.price < 25000) ||
-          (priceRange === "25k-50k" && item.price >= 25000 && item.price <= 50000) ||
-          (priceRange === "over50k" && item.price > 50000)
-        
-        return styleMatch && priceMatch
-      })
-    })).filter(category => category.items.length > 0)
+    filtered = filtered
+      .map((category) => ({
+        ...category,
+        items: category.items.filter((item) => {
+          const styleMatch =
+            selectedStyle === "all" || item.style.toLowerCase() === selectedStyle.toLowerCase();
+          const priceMatch =
+            priceRange === "all" ||
+            (priceRange === "under25k" && item.price < 25000) ||
+            (priceRange === "25k-50k" && item.price >= 25000 && item.price <= 50000) ||
+            (priceRange === "over50k" && item.price > 50000);
 
-    return filtered
+          return styleMatch && priceMatch;
+        }),
+      }))
+      .filter((category) => category.items.length > 0);
+
+    return filtered;
+  };
+
+  function addToCart(item: any) {
+    setCart([...cart, item]);
+    console.log("Added to cart:", item);
   }
 
   return (
@@ -200,7 +212,9 @@ export default function InteriorPage() {
                     <p className="text-sm text-gray-500 mb-4">{item.description}</p>
                     <div className="flex justify-between items-center">
                       <p className="text-lg font-bold">Rs.{item.price.toLocaleString()}</p>
-                      <Button>Add to Cart</Button>
+                      <Button className="mt-2" onClick={() => addToCart(item.name)}>
+                        <ShoppingCart className="w-5 h-5" />
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -210,5 +224,5 @@ export default function InteriorPage() {
         ))}
       </motion.div>
     </div>
-  )
-} 
+  );
+}
